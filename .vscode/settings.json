@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "Code/lib/sqlite-jdbc-3.36.0.3.jar"
+    ],
+    "java.dependency.packagePresentation": "hierarchical"
+}
