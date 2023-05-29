@@ -6,36 +6,124 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.json.simple.JSONObject;
 
-import com.sun.net.httpserver.HttpExchange;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
+
+import org.json.simple.JSONArray;
 
 public class Data {
-  public void getConnection(String[] path){
-    Connection connection = null;
+  public JSONObject selectDatabase(String[] path, String query){
     try {
-        connection = DriverManager.getConnection("path to your db");
-        Statement statement = connection.createStatement();
-        statement.setQueryTimeout(30); // Wait only 30 seconds to connect
-        ResultSet rs = statement.executeQuery("select * from " + path[1]);
-        while(rs.next()) {
-          // Read the entered data
-          System.out.println("ID : " + rs.getInt("id"));
-          System.out.println("Name : " + rs.getString("first_name"));
-        }
-      } catch(SQLException e) {
-        // If the error message is: "out of memory",
-        // Probably error creating(permission) or database path
-        System.err.println(e.getMessage());
-      }
-      finally {
-        try {
-          if(connection != null){
-            connection.close();
+      Connection connection = DriverManager.getConnection("jdbc:sqlite:/home/indianajones/Documents/college/pbo/Simple-Java-API-for-E-Commerce/ecommerce.db");
+      Statement statement = connection.createStatement();
+      System.out.println("connection berhasil");
+      if(path[1].equals("users")){
+        JSONObject jsonObject = new JSONObject();
+        JSONArray array = new JSONArray();
+        if(path.length == 2){
+          ResultSet rs = statement.executeQuery("select * from " + path[1]);
+          while(rs.next()) {
+            JSONObject record = new JSONObject();
+            record.put("id", rs.getInt("id"));
+            record.put("First_Name", rs.getString("first_name"));
+            record.put("Last_Name", rs.getString("last_name"));
+            record.put("Email", rs.getString("email"));
+            record.put("Phone Number", rs.getString("phone_number"));
+            record.put("Type", rs.getString("type"));
+            array.add(record);
           }
-        } catch(SQLException e) {
-          // Also failed to close the file
-          System.err.println(e.getMessage());
+          jsonObject.put("User Information", array);
+          return jsonObject;
+        }
+        if(path.length == 3){
+          ResultSet rs = statement.executeQuery("select * from " + path[1] + " where id=" + path[2]);
+          while(rs.next()) {
+            JSONObject record = new JSONObject();
+            record.put("id", rs.getInt("id"));
+            record.put("First_Name", rs.getString("first_name"));
+            record.put("Last_Name", rs.getString("last_name"));
+            record.put("Email", rs.getString("email"));
+            record.put("Phone Number", rs.getString("phone_number"));
+            record.put("Type", rs.getString("type"));
+            array.add(record);
+          }
+          jsonObject.put("User Information", array);
+          return jsonObject;
         }
       }
+      else if(path[1].equals("products")){
+        JSONObject jsonObject = new JSONObject();
+        JSONArray array = new JSONArray();
+        System.out.println(query);
+        if(path.length == 2){
+          ResultSet rs = statement.executeQuery("select * from " + path[1]);
+          while(rs.next()) {
+            JSONObject record = new JSONObject();
+            record.put("Stock", rs.getInt("stock"));
+            record.put("Price", rs.getString("price"));
+            record.put("Description", rs.getString("description"));
+            record.put("Title", rs.getString("title"));
+            record.put("Id", rs.getInt("id_products"));
+            array.add(record);
+          }
+          jsonObject.put("Product Information", array);
+          return jsonObject;
+        }
+        if(path.length == 3){
+          ResultSet rs = statement.executeQuery("select * from " + path[1] + " where id_products=" + path[2]);
+          while(rs.next()) {
+            JSONObject record = new JSONObject();
+            record.put("Stock", rs.getInt("stock"));
+            record.put("Price", rs.getString("price"));
+            record.put("Description", rs.getString("description"));
+            record.put("Title", rs.getString("title"));
+            record.put("Id", rs.getInt("id_products"));
+            array.add(record);
+          }
+          jsonObject.put("Product Information", array);
+          return jsonObject;
+        }
+      }
+      else if(path[1].equals("orders")){
+        JSONObject jsonObject = new JSONObject();
+        JSONArray array = new JSONArray();
+        if(path.length == 2){
+          ResultSet rs = statement.executeQuery("select * from " + path[1]);
+          while(rs.next()) {
+            JSONObject record = new JSONObject();
+            record.put("isPaid", rs.getInt("isPaid"));
+            record.put("Discount", rs.getInt("discount"));
+            record.put("Total", rs.getInt("total"));
+            record.put("Note", rs.getInt("note"));
+            record.put("Id", rs.getInt("id"));
+            array.add(record);
+          }
+          jsonObject.put("Orders Information", array);
+          return jsonObject;
+        }
+        if(path.length == 3){
+          ResultSet rs = statement.executeQuery("select * from " + path[1] + " where id=" + path[2]);
+          while(rs.next()) {
+            JSONObject record = new JSONObject();
+            record.put("isPaid", rs.getInt("isPaid"));
+            record.put("Discount", rs.getInt("discount"));
+            record.put("Total", rs.getInt("total"));
+            record.put("Note", rs.getInt("note"));
+            record.put("Id", rs.getInt("id"));
+            array.add(record);
+          }
+          jsonObject.put("Orders Information", array);
+          return jsonObject;
+        }
+      }
+      
+    } catch(SQLException e) {
+      System.err.println(e.getMessage());
+    }
+    return null;
   }
+  // private JSONObject getData(JSONObject object, JSONArray array, ResultSet rs){
+
+  // }
 }

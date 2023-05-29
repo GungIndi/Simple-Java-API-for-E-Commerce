@@ -3,12 +3,15 @@ package com.example;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.json.simple.JSONObject;
+
 import com.sun.net.httpserver.HttpExchange;
 
 public class Response {
-    public void getResponse(HttpExchange exchange,String[] path, String tabel, int code) throws IOException{
+    public void getResponse(HttpExchange exchange,String jsonObject,String[] path, String tabel, int code) throws IOException{
             OutputStream outputstream = exchange.getResponseBody();
-            String response = tabel;
+            exchange.getResponseHeaders().set("Content-Type","application/json");
+            String response = jsonObject;
             exchange.sendResponseHeaders(code,response.length());
             outputstream.write(response.getBytes());
             outputstream.flush();
