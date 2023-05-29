@@ -26,9 +26,18 @@ public  class Request {
         }
     }
 
-    public void handlePostRequest(){
-
-    }
+    // public void handlePostRequest(HttpExchange exchange, String[] path, String query){
+    //     if(path[1].equals("users")){
+    //         JSONObject requestBodyJson = parseRequestBody(exchange.getRequestBody());
+    //         response = usersHandler.postMethod(requestBodyJson);
+    //     }else if(path[1].equals("products")){
+    //         JSONObject requestBodyJson = parseRequestBody(exchange.getRequestBody());
+    //         response = productsHandler.postMethod(requestBodyJson);
+    //     }else if(path[1].equals("orders")){
+    //         JSONObject requestBodyJson = parseRequestBody(exchange.getRequestBody());
+    //         response = ordersHandler.postMethod(requestBodyJson);
+    //     }
+    // }
 
     public void handlePutRequest(){
 
