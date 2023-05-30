@@ -3,8 +3,6 @@ package com.example;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.json.simple.JSONObject;
-
 import com.sun.net.httpserver.HttpExchange;
 
 public class Response {

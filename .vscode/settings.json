@@ -4,5 +4,6 @@
         "Code/lib/sqlite-jdbc-3.36.0.3.jar"
     ],
     "java.dependency.packagePresentation": "hierarchical",
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.debug.settings.onBuildFailureProceed": true
 }

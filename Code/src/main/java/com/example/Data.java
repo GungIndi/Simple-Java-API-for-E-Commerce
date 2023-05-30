@@ -1,14 +1,13 @@
 package com.example;
 
-// import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.json.simple.JSONObject;
 
+import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
 public class Data {
@@ -17,12 +16,12 @@ public class Data {
   public JSONObject selectData(String[] path, String query){
     try {
       Statement statement = getConnection().createStatement();
-      System.out.println("connection berhasil");
+      System.out.println("Connection Succes..");
       if(query != null){
         if(path[1].equals("users")){
           JSONObject jsonObject = new JSONObject();
           JSONArray array = new JSONArray();
-          ResultSet rs = statement.executeQuery("select * from " + path[1] + " where " + query );
+          ResultSet rs = statement.executeQuery("select * from " + path[1] + " inner join address on address.id_users = users.id where " + query);;
           while(rs.next()) {
             JSONObject record = new JSONObject();
             record.put("Id", rs.getInt("id"));
@@ -31,13 +30,16 @@ public class Data {
             record.put("Email", rs.getString("email"));
             record.put("Phone_Number", rs.getString("phone_number"));
             record.put("Type", rs.getString("type"));
+            record.put("Address", rs.getString("address"));
+            record.put("City", rs.getString("city"));
+            record.put("Province", rs.getString("province"));
             array.add(record);
           }
           jsonObject.put("User Information", array);
           return jsonObject;
         }
       }
-      System.out.println(query);
+
       if(path[1].equals("users")){
         JSONObject jsonObject = new JSONObject();
         JSONArray array = new JSONArray();
@@ -57,7 +59,7 @@ public class Data {
           return jsonObject;
         }
         if(path.length == 3){
-          ResultSet rs = statement.executeQuery("select * from " + path[1] + " where id=" + path[2]);
+          ResultSet rs = statement.executeQuery("select * from " + path[1] + " inner join address on address.id_users = users.id where id=" + path[2]);
           while(rs.next()) {
             JSONObject record = new JSONObject();
             record.put("Id", rs.getInt("id"));
@@ -66,6 +68,9 @@ public class Data {
             record.put("Email", rs.getString("email"));
             record.put("Phone_Number", rs.getString("phone_number"));
             record.put("Type", rs.getString("type"));
+            record.put("Address", rs.getString("address"));
+            record.put("City", rs.getString("city"));
+            record.put("Province", rs.getString("province"));
             array.add(record);
           }
           jsonObject.put("User Information", array);
@@ -197,7 +202,7 @@ public class Data {
   }
   
   public String postData(JSONObject requestBodyJson, String[] path){
-    if(path[1].equals("users")){
+    if(path[1].equals("users") && requestBodyJson.size() == 5){
       String first_name = (String) requestBodyJson.get("First_Name");
       String last_name = (String) requestBodyJson.get("Last_Name");
       String email = (String) requestBodyJson.get("Email");
@@ -220,7 +225,7 @@ public class Data {
       System.out.println(rowsAffected + " rows inserted!");
       return rowsAffected + " rows inserted!";
     }
-    else if(path[1].equals("orders")){
+    else if(path[1].equals("orders") && requestBodyJson.size() == 5){
       int id_buyer = Integer.parseInt(requestBodyJson.get("Id_Buyer").toString());
       int note = Integer.parseInt(requestBodyJson.get("Note").toString());
       int total = Integer.parseInt(requestBodyJson.get("Total").toString());
@@ -243,7 +248,7 @@ public class Data {
       System.out.println(rowsAffected + " rows inserted!");
       return rowsAffected + " rows inserted!";
     }
-    else if(path[1].equals("products")){
+    else if(path[1].equals("products") && requestBodyJson.size() == 5){
       int id_seller = Integer.parseInt(requestBodyJson.get("Id_Seller").toString());
       String title = requestBodyJson.get("Title").toString();
       String description = requestBodyJson.get("Description").toString();
@@ -265,12 +270,13 @@ public class Data {
       }
       System.out.println(rowsAffected + " rows inserted!");
       return rowsAffected + " rows inserted!";
+    } else{
+      return "Data tidak sesuai!";
     }
-    return null;
   }
   
   public String putData(JSONObject requestBodyJson, String[] path){
-    if(path[1].equals("users")){
+    if(path[1].equals("users") && requestBodyJson.size() == 4){
       String first_name = (String) requestBodyJson.get("First_Name");
       String last_name = (String) requestBodyJson.get("Last_Name");
       String email = (String) requestBodyJson.get("Email");
@@ -280,7 +286,6 @@ public class Data {
       int rowsAffected = 0;
       String query = "UPDATE users SET first_name = ?, last_name = ?, email = ?, phone_number = ?, type = ? WHERE id=" + path[2];
       try {
-          // Connection connection = DriverManager.getConnection("jdbc:sqlite:/home/indianajones/Documents/college/pbo/Simple-Java-API-for-E-Commerce/ecommerce.db");
           statement = getConnection().prepareStatement(query);
           statement.setString(1, first_name);
           statement.setString(2, last_name);
@@ -294,8 +299,7 @@ public class Data {
       System.out.println(rowsAffected + " rows updated!");
       return rowsAffected + " rows updated!";
     }
-
-    else if(path[1].equals("orders")){
+    else if(path[1].equals("orders") && requestBodyJson.size() == 5){
       int id_buyer = Integer.parseInt(requestBodyJson.get("Id_Buyer").toString());
       int note = Integer.parseInt(requestBodyJson.get("Note").toString());
       int total = Integer.parseInt(requestBodyJson.get("Total").toString());
@@ -305,7 +309,6 @@ public class Data {
       int rowsAffected = 0;
       String query = "UPDATE orders SET id_buyer = ?, note = ?, total = ?, discount = ?, isPaid = ? WHERE id=" + path[2];
       try {
-          // Connection connection = DriverManager.getConnection("jdbc:sqlite:/home/indianajones/Documents/college/pbo/Simple-Java-API-for-E-Commerce/ecommerce.db");
           statement = getConnection().prepareStatement(query);
           statement.setInt(1, id_buyer);
           statement.setInt(2, note);
@@ -319,7 +322,7 @@ public class Data {
       System.out.println(rowsAffected + " rows updated!");
       return rowsAffected + " rows updated!";
     }
-    else if(path[1].equals("products")){
+    else if(path[1].equals("products") && requestBodyJson.size() == 5){
       int id_seller = Integer.parseInt(requestBodyJson.get("Id_Seller").toString());
       String title = requestBodyJson.get("Title").toString();
       String description = requestBodyJson.get("Description").toString();
@@ -370,4 +373,6 @@ public class Data {
     }
     return this.connection;
   }
+
 }
+
