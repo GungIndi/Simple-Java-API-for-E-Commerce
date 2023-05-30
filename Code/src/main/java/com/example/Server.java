@@ -2,7 +2,7 @@ package com.example;
 
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
-
+import java.text.ParseException;
 
 // import java.io.OutputStream;
 
@@ -14,19 +14,29 @@ public  class Server implements HttpHandler {
         String[] path = exchange.getRequestURI().getPath().split("/");
         String query = exchange.getRequestURI().getQuery();
         Request request = new Request();
-        // Connect connect = new Connect();
         if("GET".equals(exchange.getRequestMethod())){
-            // connect.getConnection(path);
             request.handleGetRequest(exchange,path,query);
         }
         if("POST".equals(exchange.getRequestMethod())){
-            // handleGetRequest(exchange,path,query);
+            try {
+                request.handlePostRequest(exchange,path,query);
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
         }
         if("PUT".equals(exchange.getRequestMethod())){
-            // handleGetRequest(exchange,path,query);
+            try {
+                request.handlePutRequest(exchange,path,query);
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
         }
         if("DELETE".equals(exchange.getRequestMethod())){
-            // handleGetRequest(exchange,path,query);
+            try {
+                request.handleDeleteRequest(exchange,path,query);
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
