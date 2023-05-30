@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import org.json.simple.JSONObject;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-
 import org.json.simple.JSONArray;
 
 public class Data {
@@ -18,15 +16,13 @@ public class Data {
 
   public JSONObject selectData(String[] path, String query){
     try {
-      Connection connection = DriverManager.getConnection("jdbc:sqlite:/home/indianajones/Documents/college/pbo/Simple-Java-API-for-E-Commerce/ecommerce.db");
-      Statement statement = connection.createStatement();
+      Statement statement = getConnection().createStatement();
       System.out.println("connection berhasil");
       if(query != null){
         if(path[1].equals("users")){
           JSONObject jsonObject = new JSONObject();
           JSONArray array = new JSONArray();
-          // String[] paramQuery = query.split("?");
-          ResultSet rs = statement.executeQuery("select * from " + path[1] );
+          ResultSet rs = statement.executeQuery("select * from " + path[1] + " where " + query );
           while(rs.next()) {
             JSONObject record = new JSONObject();
             record.put("Id", rs.getInt("id"));
@@ -136,6 +132,7 @@ public class Data {
             record.put("Price", rs.getString("price"));
             record.put("Description", rs.getString("description"));
             record.put("Title", rs.getString("title"));
+            record.put("Id_Seller", rs.getInt("id_seller"));
             record.put("Id", rs.getInt("id_products"));
             array.add(record);
           }
@@ -150,6 +147,7 @@ public class Data {
             record.put("Price", rs.getString("price"));
             record.put("Description", rs.getString("description"));
             record.put("Title", rs.getString("title"));
+            record.put("Id_Seller", rs.getInt("id_seller"));
             record.put("Id", rs.getInt("id_products"));
             array.add(record);
           }
@@ -168,6 +166,7 @@ public class Data {
             record.put("Discount", rs.getInt("discount"));
             record.put("Total", rs.getInt("total"));
             record.put("Note", rs.getInt("note"));
+            record.put("Id_Buyer", rs.getInt("id_buyer"));
             record.put("Id", rs.getInt("id"));
             array.add(record);
           }
@@ -182,6 +181,7 @@ public class Data {
             record.put("Discount", rs.getInt("discount"));
             record.put("Total", rs.getInt("total"));
             record.put("Note", rs.getInt("note"));
+            record.put("Id_Buyer", rs.getInt("id_buyer"));
             record.put("Id", rs.getInt("id"));
             array.add(record);
           }
@@ -207,8 +207,7 @@ public class Data {
       int rowsAffected = 0;
       String query = "INSERT INTO users(first_name, last_name, email, phone_number, type) VALUES(?,?,?,?,?)";
       try {
-          Connection connection = DriverManager.getConnection("jdbc:sqlite:/home/indianajones/Documents/college/pbo/Simple-Java-API-for-E-Commerce/ecommerce.db");
-          statement = connection.prepareStatement(query);
+          statement = getConnection().prepareStatement(query);
           statement.setString(1, first_name);
           statement.setString(2, last_name);
           statement.setString(3, email);
@@ -231,8 +230,7 @@ public class Data {
       int rowsAffected = 0;
       String query = "INSERT INTO orders(id_buyer, note, total, discount, isPaid) VALUES(?,?,?,?,?)";
       try {
-          Connection connection = DriverManager.getConnection("jdbc:sqlite:/home/indianajones/Documents/college/pbo/Simple-Java-API-for-E-Commerce/ecommerce.db");
-          statement = connection.prepareStatement(query);
+          statement = getConnection().prepareStatement(query);
           statement.setInt(1, id_buyer);
           statement.setInt(2, note);
           statement.setInt(3, total);
@@ -255,8 +253,7 @@ public class Data {
       int rowsAffected = 0;
       String query = "INSERT INTO products(id_seller, title, description, price, stock) VALUES(?,?,?,?,?)";
       try {
-          Connection connection = DriverManager.getConnection("jdbc:sqlite:/home/indianajones/Documents/college/pbo/Simple-Java-API-for-E-Commerce/ecommerce.db");
-          statement = connection.prepareStatement(query);
+          statement = getConnection().prepareStatement(query);
           statement.setInt(1, id_seller);
           statement.setString(2, title);
           statement.setString(3, description);
@@ -306,7 +303,7 @@ public class Data {
       int isPaid = Integer.parseInt(requestBodyJson.get("isPaid").toString());
       PreparedStatement statement = null;
       int rowsAffected = 0;
-      String query = "INSERT INTO orders(id_buyer, note, total, discount, isPaid) VALUES(?,?,?,?,?)";
+      String query = "UPDATE orders SET id_buyer = ?, note = ?, total = ?, discount = ?, isPaid = ? WHERE id=" + path[2];
       try {
           // Connection connection = DriverManager.getConnection("jdbc:sqlite:/home/indianajones/Documents/college/pbo/Simple-Java-API-for-E-Commerce/ecommerce.db");
           statement = getConnection().prepareStatement(query);
@@ -319,8 +316,8 @@ public class Data {
       }catch (SQLException e){
           e.printStackTrace();
       }
-      System.out.println(rowsAffected + " rows inserted!");
-      return rowsAffected + " rows inserted!";
+      System.out.println(rowsAffected + " rows updated!");
+      return rowsAffected + " rows updated!";
     }
     else if(path[1].equals("products")){
       int id_seller = Integer.parseInt(requestBodyJson.get("Id_Seller").toString());
@@ -330,7 +327,7 @@ public class Data {
       int stock = Integer.parseInt(requestBodyJson.get("Stock").toString());
       PreparedStatement statement = null;
       int rowsAffected = 0;
-      String query = "INSERT INTO products(id_seller, title, description, price, stock) VALUES(?,?,?,?,?)";
+      String query = "UPDATE products SET id_seller = ?, title = ?, description = ?,  price = ?, stock = ? WHERE id_products=" + path[2];
       try {
           statement = getConnection().prepareStatement(query);
           statement.setInt(1, id_seller);
@@ -342,8 +339,8 @@ public class Data {
       }catch (SQLException e){
           e.printStackTrace();
       }
-      System.out.println(rowsAffected + " rows inserted!");
-      return rowsAffected + " rows inserted!";
+      System.out.println(rowsAffected + " rows updated!");
+      return rowsAffected + " rows updated!";
     }
     return null;
   } 
