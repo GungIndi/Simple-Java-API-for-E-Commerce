@@ -4,9 +4,12 @@ Anak Agung Indi Kusuma Putra
 2205551079
 
 ## About
+
 Program Simple Java API for E-Commerce merupakan program  API Server dalam bahasa java yang digunakan untuk menghubungkan request dari user ke database yang berbasis sqlite .
 
 ## Alur Program
+
+Simplenya program ini akan membuka port 8079 di localhost dan akan menjadi http server untuk menerima http request yang dikirim oleh user
 <br>
 
 ### Otorisasi API-Key
