@@ -214,12 +214,16 @@ Untuk dapat melihat review yang dimiliki id user tertentu maka dapat dengan meng
  {
     "Orders Information": [
         {
+            "First_Name": "Putu",
             "isPaid": 1,
             "Discount": 0,
-            "Id_Buyer": 1,
-            "Total": 4,
-            "Note": 0,
-            "Id": 5
+            "Price": 50000,
+            "Last_Name": "Putri",
+            "Id_Buyer": 10,
+            "Total": 1,
+            "Quantity": 1,
+            "Title": "Tas",
+            "Id": 2
         }
     ]
 }
@@ -290,6 +294,27 @@ Untuk dapat melihat daftar seluruh informasi produk maka dapat dengan mengirimka
     ]
 }
 ```
+
+### Melihat Daftar Produk dengan Id tertentu
+
+Untuk dapat melihat produk dengan id tertentu dapat dengan mengirimkan request url `http:localhost:8079/products/3` sebagai contoh jika kita ingin melihat informasi dari produk dengan id 3. request url diatas akan mendapat response berupa data JSON dari produk seperti berikut
+
+```
+{
+    "Product Information": [
+        {
+            "Description": "Tas Gunung",
+            "Price": "50000",
+            "Title": "Tas",
+            "Id": 3,
+            "Stock": 10,
+            "Id_Seller": 7
+        }
+    ]
+}
+```
+
+
 ### Memfilter dengan Query Params
 
 Untuk dapat melihat informasi seluruh user yang memiliki tipe buyer maka dapat dengan mengirimkan request url `http:localhost:8079/users?type="Buyer"`seperti di bawah ini
