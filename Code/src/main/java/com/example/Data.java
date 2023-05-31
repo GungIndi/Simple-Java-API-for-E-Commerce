@@ -145,13 +145,16 @@ public class Data {
           return jsonObject;
         }
         if(path.length == 3){
-          ResultSet rs = statement.executeQuery("select * from " + path[1] + " where id_products=" + path[2]);
+          ResultSet rs = statement.executeQuery("select * from products inner join users on users.id = products.id_seller where id_products=" + path[2]);
           while(rs.next()) {
             JSONObject record = new JSONObject();
             record.put("Stock", rs.getInt("stock"));
             record.put("Price", rs.getString("price"));
             record.put("Description", rs.getString("description"));
             record.put("Title", rs.getString("title"));
+            record.put("Email", rs.getString("email"));
+            record.put("First_Name", rs.getString("first_name"));
+            record.put("Last_Name", rs.getString("last_name"));
             record.put("Id_Seller", rs.getInt("id_seller"));
             record.put("Id", rs.getInt("id_products"));
             array.add(record);

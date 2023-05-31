@@ -295,20 +295,23 @@ Untuk dapat melihat daftar seluruh informasi produk maka dapat dengan mengirimka
 }
 ```
 
-### Melihat Daftar Produk dengan Id tertentu
+### Melihat Daftar Produk dan seller dengan Id tertentu
 
-Untuk dapat melihat produk dengan id tertentu dapat dengan mengirimkan request url `http:localhost:8079/products/3` sebagai contoh jika kita ingin melihat informasi dari produk dengan id 3. request url diatas akan mendapat response berupa data JSON dari produk seperti berikut
+Untuk dapat melihat produk dengan id tertentu dapat dengan mengirimkan request url `http:localhost:8079/products/3` sebagai contoh jika kita ingin melihat informasi dari produk dan seller dengan id_products = 3. request url diatas akan mendapat response berupa data JSON dari produk seperti berikut
 
 ```
 {
     "Product Information": [
         {
-            "Description": "Tas Gunung",
+            "First_Name": "Tude",
+            "Description": "Topi Koboi",
+            "Email": "tudeprayatna@email.com",
             "Price": "50000",
-            "Title": "Tas",
-            "Id": 3,
+            "Last_Name": "Prayatna",
+            "Title": "Topi",
+            "Id": 2,
             "Stock": 10,
-            "Id_Seller": 7
+            "Id_Seller": 5
         }
     ]
 }
